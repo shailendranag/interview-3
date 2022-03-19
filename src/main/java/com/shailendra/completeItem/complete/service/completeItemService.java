@@ -4,6 +4,7 @@ import com.netflix.discovery.EurekaClient;
 import com.shailendra.completeItem.complete.dao.item;
 import com.shailendra.completeItem.complete.dao.itemInventory;
 import com.shailendra.completeItem.complete.entity.completeItem;
+import com.shailendra.completeItem.complete.exception.noSupplyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,14 +50,16 @@ public class completeItemService {
 
     public item getItem(int itemId){
         String url = "http://localhost:8200/item/"+itemId;
-        item item1 = restTemplate.getForObject(url,item.class);
-        return item1;
+        item itemResponse = restTemplate.getForObject(url,item.class);
+        return itemResponse;
     }
 
-    public void mapping(item Item, itemInventory inventory){
+    public void mapping(item Item, itemInventory inventory) throws noSupplyException {
         this.completeitem.setItemId(Item.getItemId());
         this.completeitem.setDesc(Item.getDescription());
         this.completeitem.setUnitPrice(Item.getUnitPrice());
+        if(inventory.getSupplyQty()-inventory.getDemandQty() < 0 )
+            throw new noSupplyException("Demand is greater than Supply");
         this.completeitem.setAvailQty(inventory.getSupplyQty()-inventory.getDemandQty());
     }
 }
