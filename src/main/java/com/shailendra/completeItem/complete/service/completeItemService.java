@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Service
 public class completeItemService {
 
@@ -28,18 +30,21 @@ public class completeItemService {
         this.completeitem = completeitem;
     }
 
-    public completeItem getCompleteitemDetails(int itemId){
-        Item = getItem(itemId);
+    public completeItem getCompleteitemDetails(int itemId) throws Exception {
+        //Item = getItem(itemId);
         inventory = getInventoryDetails(itemId);
+        Item = getItem(itemId);
         mapping(Item,inventory);
         return completeitem;
     }
 
-    public itemInventory getInventoryDetails(int itemId){
+    public itemInventory getInventoryDetails(int itemId) {
 
         String url = "http://localhost:8100/itemInventory/"+itemId;
-        itemInventory itemInventory1 = restTemplate.getForObject(url,itemInventory.class);
-        return itemInventory1;
+        itemInventory itemInventoryResponse = restTemplate.getForObject(url,itemInventory.class);
+        if(itemInventoryResponse == null)
+            throw new IllegalArgumentException("Illegal Argument passed : " + itemInventoryResponse);
+        return itemInventoryResponse;
     }
 
     public item getItem(int itemId){

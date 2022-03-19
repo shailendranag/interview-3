@@ -20,7 +20,7 @@ public class completeItemController {
     }
 
     @GetMapping("/{itemId}")
-    public completeItem getcompleteDetails(@PathVariable int itemId){
+    public completeItem getcompleteDetails(@PathVariable int itemId) throws Exception {
         return completeItemService.getCompleteitemDetails(itemId);
     }
 }
