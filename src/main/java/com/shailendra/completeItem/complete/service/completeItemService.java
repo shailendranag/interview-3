@@ -22,14 +22,16 @@ public class completeItemService {
     }
 
     @Autowired
-    public completeItemService(RestTemplate restTemplate, EurekaClient eurekaClient) {
+    public completeItemService(RestTemplate restTemplate, EurekaClient eurekaClient , completeItem completeitem) {
         this.restTemplate = restTemplate;
         this.eurekaClient = eurekaClient;
+        this.completeitem = completeitem;
     }
 
     public completeItem getCompleteitemDetails(int itemId){
         Item = getItem(itemId);
         inventory = getInventoryDetails(itemId);
+        mapping(Item,inventory);
         return completeitem;
     }
 
@@ -41,7 +43,7 @@ public class completeItemService {
     }
 
     public item getItem(int itemId){
-        String url = "http://localhost:8100/item/"+itemId;
+        String url = "http://localhost:8200/item/"+itemId;
         item item1 = restTemplate.getForObject(url,item.class);
         return item1;
     }

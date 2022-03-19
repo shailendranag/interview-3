@@ -1,6 +1,8 @@
 package com.shailendra.completeItem.complete.entity;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class completeItem {
 
     private int itemId;
